@@ -1,0 +1,19 @@
+﻿@model MovieApplicationMVC.Models.User
+@{
+    ViewBag.Title = "Profile";
+}
+
+<h2>Profile</h2>
+
+<p>
+    <strong>User Name:</strong> @Model.UserName
+</p>
+<p>
+    <strong>Email:</strong> @Model.Email
+</p>
+<p>
+    <strong>Mobile:</strong> @Model.Mobile
+</p>
+
+<a href="@Url.Action("EditProfile", "User")" class="btn btn-primary">Edit Profile</a>
+<a href="@Url.Action("DeleteAccount", "User")" class="btn btn-danger">Delete Account</a>

@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Select Location";
+}
+
+<h2>Select Location</h2>
+
+@using (Html.BeginForm("TheaterList", "Home", FormMethod.Get))
+{
+    <input type="hidden" name="movieId" value="@ViewBag.MovieId" />
+
+    <div class="form-group">
+        <label for="city">Enter your City:</label>
+        <input type="text" class="form-control" name="city" id="city" placeholder="Enter city name" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Show Theaters</button>
+}

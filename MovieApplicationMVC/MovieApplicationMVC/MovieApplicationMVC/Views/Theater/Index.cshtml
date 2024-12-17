@@ -1,0 +1,44 @@
+﻿@model List<MovieApplicationMVC.Models.Theater>
+
+<h2>Theaters</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Theater Name</th>
+            <th>Location</th>
+            <th>City</th>
+            <th>Seat Count</th>
+            <th>Theater Type</th>
+            @if (Session["UserType"]?.ToString() == "Admin")
+            {
+                <th>Actions</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var theater in Model)
+        {
+            <tr>
+                <td>@theater.TheaterName</td>
+                <td>@theater.Location</td>
+                <td>@theater.City</td>
+                <td>@theater.SeatCount</td>
+                <td>@theater.TheaterType</td>
+                @if (Session["UserType"]?.ToString() == "Admin")
+                {
+                    <td>
+                        <a href="@Url.Action("Edit", "Theater", new { id = theater.TheaterId })">Edit</a> |
+                        <a href="@Url.Action("Delete", "Theater", new { id = theater.TheaterId })"
+                           onclick="return confirm('Are you sure you want to delete this theater?');">Delete</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Session["UserType"]?.ToString() == "Admin")
+{
+    <a href="@Url.Action("Create", "Theater")" class="btn btn-primary">Add Theater</a>
+}

@@ -1,0 +1,56 @@
+﻿@model List<MovieApplicationMVC.Models.MovieTheaterDetails>
+
+@{
+    ViewBag.Title = "Theater List";
+}
+
+<h2>Theaters in @ViewBag.City</h2>
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Movie Title</th>
+                <th>Theater Name</th>
+                <th>Show Time</th>
+                <th>Ticket Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.TheaterName</td>
+                    <td>@item.ShowDateTime.ToString("g")</td>
+                    <td>@item.TicketPrice.ToString("C")</td>
+                    <td>
+                    
+                        @Html.ActionLink("Book Now", "Create", "Booking", new
+                        {
+                            movieId = item.MovieId,
+                            theaterId = item.TheaterId,
+                            showTimeId = item.ShowTimeId,
+                            title = item.Title,
+                            theaterName = item.TheaterName,
+                            ticketPrice = item.TicketPrice,
+                            showDateTime = item.ShowDateTime.ToString("yyyy-MM-ddTHH:mm:ss") // Correct DateTime format
+                        }, new { @class = "btn btn-primary" })
+                    
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No theaters available for the selected movie in this city.</p>
+}
+
+<p>
+    @Html.ActionLink("Back to Movie Details", "Index", "Home", null, new { @class = "btn btn-secondary" })
+</p>

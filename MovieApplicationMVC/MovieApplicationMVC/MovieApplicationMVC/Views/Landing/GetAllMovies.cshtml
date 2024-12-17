@@ -1,0 +1,42 @@
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using Newtonsoft.Json;
+using MovieApplicationMVC.Models;
+
+namespace MovieApplicationMVC.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly string apiBaseUrl = "http://localhost:49681";
+
+        public async Task<ActionResult> Index()
+        {
+            List<Movie> movies = new List<Movie>();
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new System.Uri(apiBaseUrl);
+
+                HttpResponseMessage response = await client.GetAsync("/GetAllMovies");
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    movies = JsonConvert.DeserializeObject<List<Movie>>(json);
+                }
+                else
+                {
+                    ViewBag.Error = "Failed to load movies.";
+                }
+            }
+
+            return View(movies);
+        }
+
+        public ActionResult MovieDetails(string id)
+        {
+            return View(); // Add logic to fetch movie details by ID.
+        }
+    }
+}

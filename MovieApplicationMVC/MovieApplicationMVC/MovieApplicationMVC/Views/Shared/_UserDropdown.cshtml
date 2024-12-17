@@ -1,0 +1,16 @@
+﻿@if (Session["UserId"] == null)
+{
+    <!-- If user is not logged in -->
+    <ul>
+        <li>@Html.ActionLink("Login", "Login", "User")</li>
+        <li>@Html.ActionLink("Register", "Register", "User")</li>
+    </ul>
+}
+else
+{
+    <!-- If user is logged in -->
+    <ul>
+        <li>@Html.ActionLink("Profile", "Profile", "User")</li>
+        <li>@Html.ActionLink("Logout", "Logout", "User")</li>
+    </ul>
+}

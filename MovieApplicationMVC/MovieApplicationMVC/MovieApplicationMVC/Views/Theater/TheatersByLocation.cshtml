@@ -1,0 +1,23 @@
+﻿@model List<MovieApplicationMVC.Models.Theater>
+
+<h2>Theaters in @ViewBag.Location</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Capacity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var theater in Model)
+        {
+            <tr>
+                <td>@theater.TheaterName</td>
+                <td>@theater.Location</td>
+                <td>@theater.SeatCount</td>
+            </tr>
+        }
+    </tbody>
+</table>

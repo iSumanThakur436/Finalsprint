@@ -1,0 +1,55 @@
+﻿@model MovieApplicationMVC.Models.MovieTheaterDetails
+
+@{
+    ViewBag.Title = "Create Booking";
+}
+
+<h2>Create Booking</h2>
+
+@using (Html.BeginForm("Create", "Booking", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.MovieId)
+    @Html.HiddenFor(m => m.TheaterId)
+    @Html.HiddenFor(m => m.ShowTimeId)
+    @Html.HiddenFor(m => m.Title)
+    @Html.HiddenFor(m => m.TheaterName)
+    @Html.HiddenFor(m => m.ShowDateTime)
+    @Html.HiddenFor(m => m.TicketPrice)
+
+    <div class="form-group">
+        <label>Movie Title:</label>
+        <input type="text" class="form-control" value="@Model.Title" disabled />
+    </div>
+
+    <div class="form-group">
+        <label>Theater Name:</label>
+        <input type="text" class="form-control" value="@Model.TheaterName" disabled />
+    </div>
+
+    <div class="form-group">
+        <label>Show Date & Time:</label>
+        <input type="text" class="form-control" value="@Model.ShowDateTime.ToString("g")" disabled />
+    </div>
+
+    <div class="form-group">
+        <label>Ticket Price:</label>
+        <input type="text" class="form-control" value="@Model.TicketPrice.ToString("C")" disabled />
+    </div>
+
+    <div class="form-group">
+        <label for="numberOfSeats">Number of Seats:</label>
+        <input type="number" name="numberOfSeats" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="bookingDate">Booking Date:</label>
+        <input type="date" name="bookingDate" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">Book Now</button>
+}
+
+<p>
+    @Html.ActionLink("Back to Theaters", "Index", "Home", null, new { @class = "btn btn-secondary" })
+</p>
