@@ -1,0 +1,20 @@
+﻿
+
+@model List<MovieApplicationMVC.Models.Movie>
+
+<div class="row">
+    @foreach (var movie in Model)
+    {
+        <div class="col-md-2 movie-card">
+            <div class="card shadow-sm">
+                <a href="@Url.Action("MovieDetails", "Home", new { id = movie.MovieId })">
+                    <img src="@movie.Poster" class="card-img-top" alt="Movie Poster">
+                </a>
+                <div class="card-body text-center">
+                    <h6 class="card-title">@movie.Title</h6>
+                    <p class="card-text text-muted">@movie.Genre</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>

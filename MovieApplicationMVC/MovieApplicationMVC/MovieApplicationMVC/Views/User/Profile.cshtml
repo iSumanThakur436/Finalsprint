@@ -3,17 +3,107 @@
     ViewBag.Title = "Profile";
 }
 
-<h2>Profile</h2>
+<div class="profile-container">
+    <h2>Profile</h2>
 
-<p>
-    <strong>User Name:</strong> @Model.UserName
-</p>
-<p>
-    <strong>Email:</strong> @Model.Email
-</p>
-<p>
-    <strong>Mobile:</strong> @Model.Mobile
-</p>
+    <div class="profile-info">
+        <p><strong>User Name:</strong> @Model.UserName</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Mobile:</strong> @Model.Mobile</p>
+    </div>
 
-<a href="@Url.Action("EditProfile", "User")" class="btn btn-primary">Edit Profile</a>
-<a href="@Url.Action("DeleteAccount", "User")" class="btn btn-danger">Delete Account</a>
+    <div class="profile-actions">
+        <a href="@Url.Action("EditProfile", "User")" class="btn btn-edit">Edit Profile</a>
+        <a href="@Url.Action("DeleteAccount", "User")" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete your account?');">Delete Account</a>
+    </div>
+</div>
+
+<style>
+    /* General Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: white; /* Pure black background */
+        color: #ffffff; /* White text */
+        margin: 0;
+        padding: 0;
+    }
+
+    .profile-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: grey; /* Slightly lighter black for contrast */
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1); /* White shadow */
+    }
+
+        .profile-container h2 {
+            text-align: center;
+            color: #ffffff; /* White heading */
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+    .profile-info p {
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        color: #e0e0e0; /* Light gray text for profile details */
+    }
+
+    .profile-actions {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 1em;
+        border-radius: 5px;
+        display: inline-block;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s, transform 0.2s ease-in-out;
+    }
+
+    .btn-edit {
+        background-color: #ffffff; /* White button */
+        color: #000000; /* Black text */
+        border: 1px solid #e0e0e0;
+    }
+
+        .btn-edit:hover {
+            background-color: #f2f2f2; /* Slightly lighter white */
+            transform: translateY(-2px);
+        }
+
+    .btn-delete {
+        background-color: #000000; /* Black button */
+        color: #ffffff; /* White text */
+        border: 1px solid #333333;
+    }
+
+        .btn-delete:hover {
+            background-color: #333333; /* Darker black for hover */
+            transform: translateY(-2px);
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 767px) {
+        .profile-container {
+            padding: 15px;
+            margin: 20px;
+        }
+
+        .profile-info p {
+            font-size: 1em;
+        }
+
+        .btn {
+            font-size: 0.9em;
+            padding: 8px 16px;
+        }
+    }
+</style>

@@ -1,15 +1,14 @@
-﻿using MovieApplicationSprint.Entities;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using MovieApplicationSprint.Entities;
 
 namespace MovieApplicationSprint.Repositories
 {
     public interface IPaymentRepository
     {
-        void AddPayment(Payment payment);
-        List<Payment> GetAllPaymentsByUser(string userId);
-        List<IGrouping<string, Payment>> GetAllPaymentsGroupedByUser();
-        Payment GetPaymentByBooking(string bookingId);
-        void UpdateBookingStatus(string bookingId, string status);
+        IEnumerable<Payment> GetAllPayments();
+        IEnumerable<Payment> GetPaymentsByUser(string userId);
+        Payment CreatePayment(Payment payment);
+        void DeletePayment(string paymentId);
+        Payment GetPaymentById(string paymentId);
     }
 }

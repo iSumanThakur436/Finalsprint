@@ -13,7 +13,30 @@ namespace MovieApplicationMVC.Controllers
 
         public BookingController()
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:49681/api/booking/") };
+            _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:49681/Booking/") };
+        }
+
+        [HttpGet]
+        public ActionResult Create(string movieId, string theaterId, string showTimeId, string title, string theaterName, int ticketPrice, string showDateTime)
+        {
+            if (Session["UserId"] == null)
+                return RedirectToAction("Login", "User");
+
+            DateTime parsedShowDateTime = DateTime.Parse(showDateTime);
+
+            var movieTheaterDetails = new MovieTheaterDetails
+            {
+                UserId = Session["UserId"].ToString(),
+                MovieId = movieId,
+                TheaterId = theaterId,
+                ShowTimeId = showTimeId,
+                Title = title,
+                TheaterName = theaterName,
+                ShowDateTime = parsedShowDateTime,
+                TicketPrice = ticketPrice
+            };
+
+            return View(movieTheaterDetails);
         }
 
         [HttpPost]
@@ -30,7 +53,7 @@ namespace MovieApplicationMVC.Controllers
 
             var booking = new Booking
             {
-                BookingId = "B" + new Random().Next(1000, 9999),
+                BookingId = "B" + new Random().Next(1000, 9999), // Random BookingId
                 UserId = Session["UserId"].ToString(),
                 MovieId = movieTheaterDetails.MovieId,
                 TheaterId = movieTheaterDetails.TheaterId,
@@ -43,13 +66,20 @@ namespace MovieApplicationMVC.Controllers
 
             try
             {
+                // Call API to create booking
                 var content = new StringContent(JsonConvert.SerializeObject(booking), Encoding.UTF8, "application/json");
                 var response = _httpClient.PostAsync("Create", content).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var bookingResponse = JsonConvert.DeserializeObject<Booking>(response.Content.ReadAsStringAsync().Result);
-                    return RedirectToAction("Payment", "Payment", new { bookingId = bookingResponse.BookingId, amount = bookingResponse.TotalPrice });
+                    var bookingResponse = JsonConvert.DeserializeObject<dynamic>(response.Content.ReadAsStringAsync().Result);
+
+                    // Redirect to Payment Controller
+                    return RedirectToAction("Payment", "Payment", new
+                    {
+                        bookingId = bookingResponse.BookingId.ToString(),
+                        amount = (int)bookingResponse.TotalPrice
+                    });
                 }
 
                 throw new Exception("Error creating booking.");
@@ -60,17 +90,6 @@ namespace MovieApplicationMVC.Controllers
             }
         }
 
-        public ActionResult Tickets(string bookingId)
-        {
-            var ticket = new Ticket
-            {
-                TicketId = "TK123",
-                BookingId = bookingId,
-                ShowTimeId = "ST456",
-                SeatNumber = "1,2"
-            };
 
-            return View(ticket);
-        }
     }
 }

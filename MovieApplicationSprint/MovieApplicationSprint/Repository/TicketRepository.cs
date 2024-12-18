@@ -1,6 +1,7 @@
 ﻿using MovieApplicationSprint.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace MovieApplicationSprint.Repositories
@@ -18,7 +19,7 @@ namespace MovieApplicationSprint.Repositories
         {
             try
             {
-                // Validate the ShowTime
+                // Validate the ShowTime existence
                 var showtime = _context.ShowTimes
                                        .Include("MovieTheaterNavigation.TheaterNavigation")
                                        .FirstOrDefault(st => st.ShowTimeId == ticket.ShowTimeId);
@@ -51,16 +52,16 @@ namespace MovieApplicationSprint.Repositories
                     throw new Exception("No more seats are available for this ShowTime.");
                 }
 
-                // Generate ticket ID (e.g., tk01, tk02)
+                // Generate ticket ID dynamically (e.g., tk01, tk02, etc.)
                 int nextTicketNumber = _context.Tickets.Count() + 1;
                 ticket.TicketId = $"tk{nextTicketNumber:00}";
 
                 _context.Tickets.Add(ticket);
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception($"Failed to add ticket: {ex.Message}");
             }
         }
 
@@ -79,9 +80,9 @@ namespace MovieApplicationSprint.Repositories
                     throw new Exception("Ticket not found.");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception($"Failed to delete ticket: {ex.Message}");
             }
         }
 
@@ -96,9 +97,9 @@ namespace MovieApplicationSprint.Repositories
                     _context.SaveChanges();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception($"Failed to delete tickets for booking {bookingId}: {ex.Message}");
             }
         }
 
@@ -106,11 +107,29 @@ namespace MovieApplicationSprint.Repositories
         {
             try
             {
-                return _context.Tickets.Find(ticketId);
+                return _context.Tickets
+                               .Include("BookingNavigation")
+                               .Include("ShowTimeNavigation")
+                               .FirstOrDefault(t => t.TicketId == ticketId);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception($"Failed to fetch ticket by ID: {ex.Message}");
+            }
+        }
+
+        public List<Ticket> GetTicketsByBooking(string bookingId)
+        {
+            try
+            {
+                return _context.Tickets
+                               .Include("ShowTimeNavigation.MovieTheaterNavigation.MovieNavigation")
+                               .Where(t => t.BookingId == bookingId)
+                               .ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to fetch tickets by Booking ID: {ex.Message}");
             }
         }
 
@@ -123,9 +142,9 @@ namespace MovieApplicationSprint.Repositories
                                .Where(t => t.ShowTimeNavigation.MovieTheaterNavigation.MovieNavigation.Title == movieName)
                                .ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception($"Failed to fetch tickets by Movie Name: {ex.Message}");
             }
         }
 
@@ -137,9 +156,9 @@ namespace MovieApplicationSprint.Repositories
                                .GroupBy(t => t.ShowTimeId)
                                .ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception($"Failed to fetch grouped tickets by ShowTime ID: {ex.Message}");
             }
         }
     }

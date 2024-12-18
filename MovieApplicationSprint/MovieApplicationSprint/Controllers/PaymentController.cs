@@ -1,79 +1,91 @@
-﻿using MovieApplicationSprint.Entities;
-using MovieApplicationSprint.Repositories;
-using Razorpay.Api;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Linq;
 using System.Web.Http;
+using MovieApplicationSprint.Entities;
+using MovieApplicationSprint.Repositories;
 
 namespace MovieApplicationSprint.Controllers
 {
-    [RoutePrefix("api/Payment")]
+    [RoutePrefix("api/payment")]
     public class PaymentController : ApiController
     {
-        private readonly IPaymentRepository _repository;
+        private readonly IPaymentRepository _paymentRepository;
 
-        public PaymentController(IPaymentRepository repository)
+        public PaymentController()
         {
-            _repository = repository;
+            _paymentRepository = new PaymentRepository(new MovieAppContext());
         }
 
-        [HttpPost, Route("ProcessPayment")]
-        public IHttpActionResult ProcessPayment([FromBody] Entities.Payment payment)
+        // Get all payments
+        [HttpGet]
+        [Route("")]
+        public IHttpActionResult GetPayments()
         {
-            try
-            {
-                // Simulate Razorpay Payment API integration
-                RazorpayClient client = new RazorpayClient("YOUR_KEY_ID", "YOUR_SECRET");
-
-                var options = new Dictionary<string, object>
-                {
-                    { "amount", payment.Amount * 100 }, // Razorpay requires amount in paise
-                    { "currency", "INR" },
-                    { "receipt", payment.PaymentId }
-                };
-
-                var order = client.Order.Create(options);
-
-                // Simulate payment success
-                payment.PaymentStatus = "Success"; // Simulate success response
-                payment.PaymentDate = DateTime.Now;
-
-                _repository.AddPayment(payment);
-
-                return Ok("Payment processed successfully.");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Payment processing failed: " + ex.Message);
-            }
+            var payments = _paymentRepository.GetAllPayments();
+            return Ok(payments);
         }
 
-        [HttpGet, Route("GetByUser/{userId}")]
+        // Get payments by user ID
+        [HttpGet]
+        [Route("user/{userId}")]
         public IHttpActionResult GetPaymentsByUser(string userId)
         {
+            var payments = _paymentRepository.GetPaymentsByUser(userId);
+            return Ok(payments);
+        }
+
+        // Create a new payment entry
+        [HttpPost]
+        [Route("create")]
+        public IHttpActionResult CreatePayment(Payment payment)
+        {
+            if (payment == null)
+                return BadRequest("Payment cannot be null.");
+
             try
             {
-                var payments = _repository.GetAllPaymentsByUser(userId);
-                return Ok(payments);
+                var createdPayment = _paymentRepository.CreatePayment(payment);
+                return Ok(createdPayment);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return InternalServerError(ex);
             }
         }
 
-        [HttpGet, Route("GetAllGroupedByUser")]
-        [Authorize(Roles = "Admin")]
-        public IHttpActionResult GetAllPaymentsGroupedByUser()
+        // Process payment and mark status as successful
+        [HttpPost]
+        [Route("process")]
+        public IHttpActionResult ProcessPayment(Payment payment)
         {
+            if (payment == null)
+                return BadRequest("Payment cannot be null.");
+
             try
             {
-                var groupedPayments = _repository.GetAllPaymentsGroupedByUser();
-                return Ok(groupedPayments);
+                var createdPayment = _paymentRepository.CreatePayment(payment);
+                createdPayment.PaymentStatus = "Successful";
+                return Ok(createdPayment);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return InternalServerError(ex);
+            }
+        }
+
+        // Delete a payment by PaymentId
+        [HttpDelete]
+        [Route("delete/{paymentId}")]
+        public IHttpActionResult DeletePayment(string paymentId)
+        {
+            try
+            {
+                _paymentRepository.DeletePayment(paymentId);
+                return Ok("Payment deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
             }
         }
     }

@@ -1,9 +1,9 @@
-﻿using MovieApplicationSprint.Entities;
-using MovieApplicationSprint.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using MovieApplicationSprint.Entities;
+using MovieApplicationSprint.Repositories;
 
 namespace MovieApplicationSprint.Controllers
 {
@@ -12,6 +12,7 @@ namespace MovieApplicationSprint.Controllers
     {
         private readonly ITicketRepository _ticketRepository;
         private readonly IBookingRepository _bookingRepository;
+
         public TicketController()
         {
             _ticketRepository = new TicketRepository();
@@ -24,40 +25,22 @@ namespace MovieApplicationSprint.Controllers
             _bookingRepository = bookingRepository;
         }
 
+        // Create a ticket after payment
         [HttpPost]
-        [Route("Create")]
-        public IHttpActionResult Create([FromBody] Ticket ticket)
+        [Route("CreateAfterPayment")]
+        public IHttpActionResult CreateAfterPayment([FromBody] Ticket ticket)
         {
             try
             {
                 // Validate Booking existence
                 var booking = _bookingRepository.GetBookingById(ticket.BookingId);
                 if (booking == null)
-                {
                     return BadRequest("Invalid Booking ID. The booking does not exist.");
-                }
 
-                // Add ticket with validation
+                // Generate a unique Ticket ID
+                ticket.TicketId = Guid.NewGuid().ToString();
                 _ticketRepository.AddTicket(ticket);
-                return Ok("Ticket created successfully.");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
 
-        [HttpGet]
-        [Route("GetById/{id}")]
-        public IHttpActionResult GetById(string id)
-        {
-            try
-            {
-                var ticket = _ticketRepository.GetTicketById(id);
-                if (ticket == null)
-                {
-                    return NotFound();
-                }
                 return Ok(ticket);
             }
             catch (Exception ex)
@@ -66,63 +49,17 @@ namespace MovieApplicationSprint.Controllers
             }
         }
 
+        // Get tickets by Booking ID
         [HttpGet]
-        [Route("GetByMovieName/{movieName}")]
-        public IHttpActionResult GetByMovieName(string movieName)
+        [Route("GetByBooking/{bookingId}")]
+        public IHttpActionResult GetByBooking(string bookingId)
         {
             try
             {
-                var tickets = _ticketRepository.GetTicketsByMovieName(movieName);
+                var tickets = _ticketRepository.GetTicketsByBooking(bookingId);
                 if (!tickets.Any())
-                {
                     return NotFound();
-                }
-                return Ok(tickets);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
 
-        [HttpDelete]
-        [Route("Delete/{id}")]
-        public IHttpActionResult Delete(string id)
-        {
-            try
-            {
-                _ticketRepository.DeleteTicket(id);
-                return Ok("Ticket deleted successfully.");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpDelete]
-        [Route("DeleteByBooking/{bookingId}")]
-        public IHttpActionResult DeleteByBooking(string bookingId)
-        {
-            try
-            {
-                _ticketRepository.DeleteTicketsByBooking(bookingId);
-                return Ok("All tickets associated with the booking have been deleted.");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("GetAllGroupedByShowId")]
-        [Authorize(Roles = "Admin")] // Restrict to Admins only
-        public IHttpActionResult GetAllGroupedByShowId()
-        {
-            try
-            {
-                var tickets = _ticketRepository.GetAllTicketsGroupedByShowId();
                 return Ok(tickets);
             }
             catch (Exception ex)

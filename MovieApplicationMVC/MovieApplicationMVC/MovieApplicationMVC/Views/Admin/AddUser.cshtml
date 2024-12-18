@@ -1,10 +1,110 @@
 ﻿@model MovieApplicationMVC.Models.User
 
 @{
-    ViewBag.Title = "EditProfile";
+    ViewBag.Title = "AddUser";
+    Layout = null;
 }
 
-<h2>EditProfile</h2>
+<style>
+    /* General body styling */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Form container */
+    form {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    /* Form title */
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #000;
+    }
+
+    /* Form group layout */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        /* Label styling */
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #000;
+        }
+
+    /* Input and select fields */
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #333;
+        border-radius: 3px;
+        background-color: #f9f9f9;
+        color: #000;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+        /* Input focus */
+        .form-control:focus {
+            outline: none;
+            border-color: #000;
+            background-color: #fff;
+        }
+
+    /* Validation messages */
+    .text-danger {
+        color: #d9534f;
+        font-size: 12px;
+    }
+
+    /* Submit button */
+    .btn {
+        padding: 10px 15px;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+
+        .btn:hover {
+            background-color: #333;
+        }
+
+    /* Link styling */
+    a {
+        color: #000;
+        text-decoration: none;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    /* Back to list link */
+    div a {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+<h2>AddUser</h2>
 
 @using (Html.BeginForm())
 {
@@ -14,8 +114,13 @@
         <h4>User</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.UserId)
-
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
         <div class="form-group">
             @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -82,12 +187,12 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Users")
 </div>

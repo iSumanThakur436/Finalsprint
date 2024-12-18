@@ -1,0 +1,156 @@
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
+    //Layout = null;
+}
+
+<div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin Dashboard</h3>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="http://localhost:57881/Admin/MovieList" class="nav-link">Movies</a></li>
+            <li><a href="http://localhost:57881/Admin/AdminTheater" class="nav-link">Theaters</a></li>
+            <li><a href="http://localhost:57881/Admin/Users" class="nav-link">Users</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <header class="main-header">
+            <h2>Welcome Back, ADMIN</h2>
+        </header>
+        <div class="content-area">
+            <div class="card">
+                <h3>Overview</h3>
+                <p>Manage all aspects of the application through the left sidebar. Click the links to get started.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styles -->
+<style>
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
+
+    .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        background-color: #343a40;
+        width: 250px;
+        height: 100%;
+        padding-top: 20px;
+        position: fixed;
+    }
+
+    .sidebar-header {
+        color: #fff;
+        text-align: center;
+        font-size: 1.5em;
+        padding: 15px 0;
+    }
+
+    .sidebar-nav {
+        list-style: none;
+        padding: 0;
+    }
+
+        .sidebar-nav li {
+            padding: 15px 0;
+        }
+
+    .nav-link {
+        display: block;
+        padding: 12px;
+        color: #ddd;
+        text-decoration: none;
+        font-size: 1.1em;
+        transition: background-color 0.3s;
+    }
+
+        .nav-link:hover {
+            background-color: #495057;
+            color: #fff;
+        }
+
+    /* Main Content Area */
+    .main-content {
+        margin-left: 250px;
+        padding: 20px;
+        flex-grow: 1;
+    }
+
+    .main-header {
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .main-header h2 {
+            margin: 0;
+            font-size: 2em;
+            color: #333;
+        }
+
+    /* Content Area Card */
+    .content-area {
+        margin-top: 30px;
+    }
+
+    .card {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+        .card h3 {
+            font-size: 1.6em;
+            color: #333;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .dashboard-container {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+            height: auto;
+            padding: 10px;
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 10px;
+        }
+
+        .main-header h2 {
+            font-size: 1.6em;
+        }
+
+        .card h3 {
+            font-size: 1.4em;
+        }
+
+        .nav-link {
+            font-size: 1em;
+        }
+    }
+</style>

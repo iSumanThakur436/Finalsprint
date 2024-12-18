@@ -8,9 +8,10 @@ namespace MovieApplicationSprint.Repositories
     {
         void AddTicket(Ticket ticket);
         void DeleteTicket(string ticketId);
-        void DeleteTicketsByBooking(string bookingid);
+        void DeleteTicketsByBooking(string bookingId);
         Ticket GetTicketById(string ticketId);
         List<IGrouping<string, Ticket>> GetAllTicketsGroupedByShowId();
-        List<Ticket> GetTicketsByMovieName(string title); // New method to fetch tickets by Booking ID
+        List<Ticket> GetTicketsByBooking(string bookingId); // Method to fetch tickets by Booking ID
+        List<Ticket> GetTicketsByMovieName(string title); // Method to fetch tickets by Movie Name
     }
 }

@@ -16,6 +16,7 @@ namespace MovieApplicationMVC.Controllers
             _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:49681/api/payment/") };
         }
 
+        // Payment Page
         [HttpGet]
         public ActionResult Payment(string bookingId, int amount)
         {
@@ -35,6 +36,7 @@ namespace MovieApplicationMVC.Controllers
             return View(paymentDetails);
         }
 
+        // Process Payment
         [HttpPost]
         public ActionResult ProcessPayment(PaymentDetails paymentDetails)
         {
@@ -45,8 +47,8 @@ namespace MovieApplicationMVC.Controllers
 
                 if (!response.IsSuccessStatusCode)
                     throw new Exception("Error processing payment.");
-
-                return RedirectToAction("Tickets", "Booking", new { bookingId = paymentDetails.BookingId });
+               
+                return RedirectToAction("CreateAfterPayment", "Ticket", new { bookingId = paymentDetails.BookingId,showTimeId="ST01", seatNumber=3 });
             }
             catch (Exception ex)
             {

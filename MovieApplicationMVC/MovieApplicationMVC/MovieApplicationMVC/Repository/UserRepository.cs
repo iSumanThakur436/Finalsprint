@@ -1,7 +1,10 @@
 ﻿using MovieApplicationMVC.Models;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace MovieApplicationMVC.Repositories
 {
@@ -55,7 +58,22 @@ public User Login(string email, string password)
             var response = _client.PutAsJsonAsync("UpdateProfile", user).Result;
             return response.IsSuccessStatusCode;
         }
+        public async Task<List<User>> GetAllUsers()
 
+        {
+
+            var response = await _client.GetAsync("GetAll"); // Call the GetAllUsers API endpoint            if (response.IsSuccessStatusCode)
+
+            {
+
+                var jsonData = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<List<User>>(jsonData); // Deserialize the JSON response            }
+
+                return null;
+
+            }
+        }
         public bool DeleteUser(string userId)
         {
             var response = _client.DeleteAsync($"DeleteUser/{userId}").Result;

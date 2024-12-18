@@ -54,21 +54,32 @@ namespace MovieApplicationMVC.Controllers
         }
 
         [HttpPost]
+        
         public ActionResult Login(string email, string password)
         {
             var user = _repository.Login(email, password);
             if (user != null)
             {
+                // Store the session variables
                 Session["UserId"] = user.UserId;
                 Session["UserName"] = user.UserName;
                 Session["UserType"] = user.UserType;
 
-                return RedirectToAction("Profile");
+                // Redirect based on UserType
+                if (user.UserType == "Admin")
+                {
+                    return RedirectToAction("Index", "Admin"); // Redirect to Admin's home page
+                }
+                else if (user.UserType == "User")
+                {
+                    return RedirectToAction("Index", "Home"); // Redirect to User's home page
+                }
             }
 
             ViewBag.Error = "Invalid credentials. Please try again.";
             return View();
         }
+
 
         public ActionResult Logout()
         {
@@ -110,6 +121,7 @@ namespace MovieApplicationMVC.Controllers
             }
             return View(user);
         }
+
 
         public ActionResult DeleteAccount()
         {

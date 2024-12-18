@@ -1,14 +1,20 @@
 ﻿@model List<MovieApplicationMVC.Models.Movie>
 @{
+    Layout = null;
     ViewBag.Title = "Movies";
+    var selectedGenre = ViewBag.SelectedGenre as string ?? "All";
 }
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>@ViewBag.Title</title>
     <style>
+        /* General Styles */
         .movie-card img {
             height: 250px;
             object-fit: cover;
@@ -16,7 +22,7 @@
 
         .carousel-item img {
             object-fit: cover;
-            height: 100vh; /* Full viewport height */
+            height: 100vh;
         }
 
         .carousel-caption {
@@ -24,32 +30,11 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
 
-        .carousel-control-prev-icon,
-        .carousel-control-next-icon {
-            background-color: black; /* Adjust the control icon background for better visibility */
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            background-color: black;
         }
 
-        .navbar-search {
-            background-color: transparent;
-            border: none;
-            box-shadow: none; /* Remove any default shadow */
-        }
-
-            /* Transparent input field inside the search bar */
-            .navbar-search input {
-                background-color: transparent;
-                color: white;
-                border: 1px solid white; /* White border for visibility */
-            }
-
-
-            /* Transparent search button */
-            .navbar-search button {
-                background-color: transparent;
-                border: 1px solid white; /* White border for visibility */
-                color: white;
-            }
-
+        /* Card Hover Effect */
         .card {
             border: none;
             transition: transform 0.3s ease-in-out;
@@ -59,48 +44,84 @@
                 transform: translateY(-10px);
             }
 
-        footer {
-            background-color: #212529;
-            color: white;
-        }
-
-        /* Make the navbar part of the carousel and fixed at the top */
+        /* Navbar & Carousel */
         header {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 10;
-            background-color: transparent; /* Transparent background */
+            background-color: transparent;
         }
 
-        /* Add padding to avoid overlap between navbar and carousel */
         .carousel {
             position: relative;
             z-index: 0;
         }
+
+        /* Footer */
+        footer {
+            background-color: #212529;
+            color: white;
+            padding: 40px 0;
+        }
+
+        .footer ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+            .footer ul li a {
+                color: white;
+                text-decoration: none;
+            }
+
+                .footer ul li a:hover {
+                    text-decoration: underline;
+                }
+
+        /* Filter Buttons */
+        .btn {
+            text-decoration: none;
+            color: black;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+
+        .active-genre {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
     </style>
 </head>
 <body>
-    <!-- Carousel Section with integrated Navbar -->
-    <section class="carousel slide" id="movieCarousel" data-bs-ride="carousel">
-        <!-- Navbar inside the Carousel -->
-        <header class="py-3 shadow-sm">
-            <div class="container d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
 
-                    <h2 class="m-0 text-white">MovieApp</h2> <!-- Make the text white for visibility -->
-                </div>
-                <form class="d-flex w-50 navbar-search">
-                    <input class="form-control me-2" type="search" placeholder="Search for Movies, Events, Plays..." aria-label="Search">
-                    <button class="btn btn-outline-light" type="submit">Search</button> <!-- Make buttons light-colored -->
+    <!-- Carousel Section -->
+    <section class="carousel slide" id="movieCarousel" data-bs-ride="carousel">
+        <header class="py-3">
+            <div class="container d-flex justify-content-between align-items-center text-white">
+                <h2 class="m-0">MovieApp</h2>
+                <form class="d-flex w-50" id="searchForm" action="@Url.Action("SearchMovies", "Home")" method="get">
+                    <input id="searchInput" class="form-control me-2" type="search" placeholder="Search for Movies..." aria-label="Search" name="movieName">
+                    <button class="btn btn-outline-light" type="submit">Search</button>
                 </form>
-                <div>
-                    <button class="btn btn-link text-white">Pune</button>
-                    <button class="btn btn-light">Sign In</button>
+
+                <div class="d-flex">
+                    <!-- Register Button -->
+                    <a href="http://localhost:57881/User/Register" class="btn btn-register text-white me-2">
+                        Register
+                    </a>
+                    <!-- Login Button -->
+                    <a href="http://localhost:57881/User/Login" class="btn btn-login text-white">
+                        Login
+                    </a>
                 </div>
             </div>
         </header>
+
 
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -135,34 +156,94 @@
         </button>
     </section>
 
-    <div class="container mt-5">
-        <h2 class="text-center">Movies</h2>
-        <hr />
 
-        @if (Model != null && Model.Count > 0)
-        {
+    <!-- Recommended Movies -->
+    <section class="py-5">
+        <div class="container">
+            <h2>Trending Movies</h2>
             <div class="row">
                 @foreach (var movie in Model)
                 {
-                    <div class="col-md-3 mb-4">
-                        <div class="card">
+                    <div class="col-md-2 movie-card">
+                        <div class="card shadow-sm">
                             <a href="@Url.Action("MovieDetails", "Home", new { id = movie.MovieId })">
-                                <img class="card-img-top" src="@movie.Poster" alt="@movie.Title" style="height: 250px; object-fit: cover;" />
+                                <img src="@movie.Poster" class="card-img-top" alt="Movie Poster">
                             </a>
-
-
-                            <div class="card-body">
-                                <h5 class="card-title text-center">@movie.Title</h5>
+                            <div class="card-body text-center">
+                                <h6 class="card-title">@movie.Title</h6>
+                                <p class="card-text text-muted">@movie.Genre</p>
                             </div>
                         </div>
                     </div>
                 }
             </div>
-        }
-        else
-        {
-            <div class="alert alert-warning text-center">
-                No movies available to display.
+        </div>
+    </section>
+
+
+    <!-- Filter by Genre -->
+    <section class="py-5">
+        <div class="container">
+            <h3>Filter by Genre</h3>
+            <div>
+                <a href="#" class="btn genre-btn @(ViewBag.SelectedGenre == "All" ? "active-genre" : "")" data-genre="All">All</a>
+                <a href="#" class="btn genre-btn @(ViewBag.SelectedGenre == "Action" ? "active-genre" : "")" data-genre="Action">Action</a>
+                <a href="#" class="btn genre-btn @(ViewBag.SelectedGenre == "Comedy" ? "active-genre" : "")" data-genre="Comedy">Comedy</a>
+                <a href="#" class="btn genre-btn @(ViewBag.SelectedGenre == "Thriller" ? "active-genre" : "")" data-genre="Thriller">Thriller</a>
             </div>
-        }
-    </div>
+
+            <hr />
+            <div id="movie-list">
+                @Html.Partial("_MovieCards", Model) <!-- Initial movie cards -->
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3"><h5>About Us</h5><p>Learn more about our company and mission.</p></div>
+                <div class="col-md-3"><h5>Quick Links</h5><ul><li><a href="#">Home</a></li><li><a href="#">Movies</a></li><li><a href="#">Contact</a></li></ul></div>
+                <div class="col-md-3"><h5>Contact</h5><p>Email: contact@movieapp.com</p><p>Phone: (123) 456-7890</p></div>
+                <div class="col-md-3"><h5>Follow Us</h5><a href="#" class="social-icon"><i class="fab fa-facebook"></i></a><a href="#" class="social-icon"><i class="fab fa-twitter"></i></a><a href="#" class="social-icon"><i class="fab fa-instagram"></i></a></div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery Script for AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        $('.genre-btn').on('click', function (e) {
+            e.preventDefault();
+
+            var genre = $(this).data('genre');
+
+            // Update active genre button style
+            $('.genre-btn').removeClass('active-genre');
+            $(this).addClass('active-genre');
+
+            // Fetch filtered movies using AJAX
+            $.ajax({
+                url: '@Url.Action("FilterByGenre", "Home")',
+                type: 'GET',
+                data: { genre: genre },
+                success: function (data) {
+                    $('#movie-list').html(data); // Update movie list without refreshing the page
+                },
+                error: function () {
+                    alert('Error loading movies. Please try again.');
+                }
+            });
+        });
+    });
+    </script>
+
+
+</body>
+</html>

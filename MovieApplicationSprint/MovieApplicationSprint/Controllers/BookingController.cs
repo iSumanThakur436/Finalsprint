@@ -13,6 +13,7 @@ public class BookingController : ApiController
         _repository = new BookingRepository();
     }
 
+    // Create a new booking
     [HttpPost, Route("Create")]
     public IHttpActionResult Create([FromBody] Booking booking)
     {
@@ -21,8 +22,15 @@ public class BookingController : ApiController
 
         try
         {
+            // Add booking to database
             _repository.CreateBooking(booking);
-            return Ok("Booking created successfully.");
+
+            // Return booking details, including BookingId and TotalPrice for payment
+            return Ok(new
+            {
+                BookingId = booking.BookingId,
+                TotalPrice = booking.TotalPrice
+            });
         }
         catch (Exception ex)
         {
@@ -31,7 +39,7 @@ public class BookingController : ApiController
     }
 
 
-
+    // Get all bookings
     [HttpGet, Route("GetAll")]
     public IHttpActionResult GetAll()
     {
@@ -46,6 +54,7 @@ public class BookingController : ApiController
         }
     }
 
+    // Get booking by ID
     [HttpGet, Route("GetById/{id}")]
     public IHttpActionResult GetById(string id)
     {
@@ -79,6 +88,7 @@ public class BookingController : ApiController
         }
     }
 
+    // Update booking status
     [HttpPut, Route("UpdateBookingStatus/{id}")]
     public IHttpActionResult UpdateBookingStatus(string id, [FromBody] Booking booking)
     {
@@ -94,6 +104,7 @@ public class BookingController : ApiController
         }
     }
 
+    // Cancel a booking
     [HttpDelete, Route("Cancel/{id}")]
     public IHttpActionResult Cancel(string id)
     {

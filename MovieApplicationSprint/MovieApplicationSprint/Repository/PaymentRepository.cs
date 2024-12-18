@@ -1,7 +1,7 @@
-﻿using MovieApplicationSprint.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MovieApplicationSprint.Entities;
 
 namespace MovieApplicationSprint.Repositories
 {
@@ -9,53 +9,42 @@ namespace MovieApplicationSprint.Repositories
     {
         private readonly MovieAppContext _context;
 
-        public PaymentRepository()
+        public PaymentRepository(MovieAppContext context)
         {
-            _context = new MovieAppContext();
+            _context = context;
         }
 
-        public void AddPayment(Payment payment)
+        public IEnumerable<Payment> GetAllPayments()
         {
-            try
-            {
-                _context.Payments.Add(payment);
-                _context.SaveChanges();
-
-                // Update booking status if payment successful
-                if (payment.PaymentStatus == "Success")
-                {
-                    UpdateBookingStatus(payment.BookingId, "Confirmed");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error processing payment: " + ex.Message);
-            }
+            return _context.Payments.ToList();
         }
 
-        public List<Payment> GetAllPaymentsByUser(string userId)
+        public IEnumerable<Payment> GetPaymentsByUser(string userId)
         {
             return _context.Payments.Where(p => p.UserId == userId).ToList();
         }
 
-        public List<IGrouping<string, Payment>> GetAllPaymentsGroupedByUser()
+        public Payment CreatePayment(Payment payment)
         {
-            return _context.Payments.GroupBy(p => p.UserId).ToList();
+            payment.PaymentId = Guid.NewGuid().ToString();
+            _context.Payments.Add(payment);
+            _context.SaveChanges();
+            return payment;
         }
 
-        public Payment GetPaymentByBooking(string bookingId)
+        public void DeletePayment(string paymentId)
         {
-            return _context.Payments.FirstOrDefault(p => p.BookingId == bookingId);
-        }
-
-        public void UpdateBookingStatus(string bookingId, string status)
-        {
-            var booking = _context.Bookings.Find(bookingId);
-            if (booking != null)
+            var payment = _context.Payments.FirstOrDefault(p => p.PaymentId == paymentId);
+            if (payment != null)
             {
-                booking.Status = status;
+                _context.Payments.Remove(payment);
                 _context.SaveChanges();
             }
+        }
+
+        public Payment GetPaymentById(string paymentId)
+        {
+            return _context.Payments.FirstOrDefault(p => p.PaymentId == paymentId);
         }
     }
 }
