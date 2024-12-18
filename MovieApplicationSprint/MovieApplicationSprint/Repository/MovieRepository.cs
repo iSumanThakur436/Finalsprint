@@ -177,5 +177,22 @@ namespace MovieApplicationSprint.Repository
                 throw;
             }
         }
+        public List<Movie> SearchMovies(string keyword)
+        {
+            try
+            {
+                return context.Movies
+                    .Where(m =>
+                        m.Title.ToLower().Contains(keyword.ToLower()) ||
+                        m.Actor.ToLower().Contains(keyword.ToLower()) ||
+                        m.Director.ToLower().Contains(keyword.ToLower()))
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

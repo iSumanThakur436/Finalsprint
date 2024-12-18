@@ -21,5 +21,7 @@ namespace MovieApplicationSprint.Repository
         List<Movie> GetAllMovies();
         List<Movie> GetMoviesWithPoster();
         List<Movie> GetMoviesWithTrailer();
+        List<Movie> SearchMovies(string keyword);
+
     }
 }

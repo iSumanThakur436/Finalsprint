@@ -171,5 +171,19 @@ namespace MovieApplicationSprint.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet, Route("SearchMovies/{keyword}")]
+        public IHttpActionResult SearchMovies(string keyword)
+        {
+            try
+            {
+                var movies = repository.SearchMovies(keyword);
+                return Ok(movies);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

@@ -1,6 +1,10 @@
 ﻿using MovieApplicationMVC.Models;
 using MovieApplicationMVC.Repositories;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+
 using System.Web.Mvc;
 
 namespace MovieApplicationMVC.Controllers
@@ -140,5 +144,37 @@ namespace MovieApplicationMVC.Controllers
             ViewBag.Error = "Failed to delete account.";
             return RedirectToAction("Profile");
         }
+
+        public async Task<ActionResult> YourBookings()
+        {
+            // Get the current logged-in user's ID from session
+            string userId = Session["UserId"]?.ToString();
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                ViewBag.Error = "User not logged in.";
+                return RedirectToAction("Login"); // Redirect to login if no user ID is found in session
+            }
+
+            List<BookingViewModel> bookings = new List<BookingViewModel>();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:49681/api/"); // Replace with your actual API URL
+                var response = await client.GetAsync($"Booking/GetByUser/{userId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    bookings = await response.Content.ReadAsAsync<List<BookingViewModel>>();
+                }
+                else
+                {
+                    ViewBag.Error = "Unable to load bookings.";
+                }
+            }
+
+            return View(bookings);
+        }
+
     }
 }

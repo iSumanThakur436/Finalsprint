@@ -60,7 +60,7 @@ namespace MovieApplicationMVC.Controllers
                 ShowTimeId = movieTheaterDetails.ShowTimeId,
                 BookingDate = bookingDate,
                 NumberOfSeats = numberOfSeats,
-                TotalPrice = numberOfSeats * movieTheaterDetails.TicketPrice,
+                TotalPrice = movieTheaterDetails.TicketPrice,
                 Status = "Pending"
             };
 
@@ -78,7 +78,9 @@ namespace MovieApplicationMVC.Controllers
                     return RedirectToAction("Payment", "Payment", new
                     {
                         bookingId = bookingResponse.BookingId.ToString(),
-                        amount = (int)bookingResponse.TotalPrice
+                        amount = (int)bookingResponse.TotalPrice,
+                        seatno= bookingResponse.NumberOfSeats.ToString(),
+                        showtimeid = bookingResponse.ShowTime_
                     });
                 }
 

@@ -13,8 +13,12 @@
     </div>
 
     <div class="profile-actions">
-        <a href="@Url.Action("EditProfile", "User")" class="btn btn-edit">Edit Profile</a>
-        <a href="@Url.Action("DeleteAccount", "User")" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete your account?');">Delete Account</a>
+        <div class="profile-actions">
+            <a href="@Url.Action("EditProfile", "User")" class="btn btn-edit">Edit Profile</a>
+            <a href="@Url.Action("DeleteAccount", "User")" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete your account?');">Delete Account</a>
+            
+        </div>
+
     </div>
 </div>
 

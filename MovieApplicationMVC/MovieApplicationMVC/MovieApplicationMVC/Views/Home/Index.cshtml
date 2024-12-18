@@ -105,9 +105,11 @@
             <div class="container d-flex justify-content-between align-items-center text-white">
                 <h2 class="m-0">MovieApp</h2>
                 <form class="d-flex w-50" id="searchForm" action="@Url.Action("SearchMovies", "Home")" method="get">
-                    <input id="searchInput" class="form-control me-2" type="search" placeholder="Search for Movies..." aria-label="Search" name="movieName">
+                    <input id="searchInput" class="form-control me-2" type="search" placeholder="Search for Movies by Title, Actor, or Director..." aria-label="Search" name="keyword">
                     <button class="btn btn-outline-light" type="submit">Search</button>
                 </form>
+
+
 
                 <div class="d-flex">
                     <!-- Register Button -->

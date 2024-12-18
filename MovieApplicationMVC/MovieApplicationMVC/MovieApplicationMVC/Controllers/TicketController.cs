@@ -18,17 +18,22 @@ namespace MovieApplicationMVC.Controllers
         }
 
         // Create ticket after payment
+        // Create ticket after payment
         public ActionResult CreateAfterPayment(string bookingId, string showTimeId, string seatNumber)
         {
             try
             {
+                Console.WriteLine($"BookingId: {bookingId}, ShowTimeId: {showTimeId}, SeatNumber: {seatNumber}");
+
+                // Create ticket object without TicketId
                 var ticket = new Ticket
                 {
                     BookingId = bookingId,
                     ShowTimeId = showTimeId,
-                    SeatNumber = seatNumber
+                    SeatNumber = seatNumber // Ensure seatNumber matches expected format
                 };
 
+                // Call the backend API
                 var response = _httpClient.PostAsJsonAsync("CreateAfterPayment", ticket).Result;
 
                 if (!response.IsSuccessStatusCode)
@@ -41,6 +46,7 @@ namespace MovieApplicationMVC.Controllers
                 return View("Error", new HandleErrorInfo(ex, "Ticket", "CreateAfterPayment"));
             }
         }
+
 
         // Display tickets by booking
         public ActionResult Tickets(string bookingId)

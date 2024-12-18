@@ -1,0 +1,36 @@
+﻿@model List<MovieApplicationMVC.Models.Movie>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Use the same layout if needed
+    ViewBag.Title = "Search Results";
+}
+
+<section class="py-5">
+    <div class="container">
+        <h2>Search Results</h2>
+        <div class="row">
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var movie in Model)
+                {
+                    <div class="col-md-3 movie-card">
+                        <div class="card shadow-sm">
+                            <a href="@Url.Action("MovieDetails", "Home", new { id = movie.MovieId })">
+                                <img src="@movie.Poster" class="card-img-top" alt="Movie Poster">
+                            </a>
+                            <div class="card-body text-center">
+                                <h6 class="card-title">@movie.Title</h6>
+                                <p class="card-text text-muted">@movie.Genre</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No movies found matching your search criteria.
+                </div>
+            }
+        </div>
+    </div>
+</section>

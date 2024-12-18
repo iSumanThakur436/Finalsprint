@@ -18,7 +18,7 @@ namespace MovieApplicationMVC.Controllers
 
         // Payment Page
         [HttpGet]
-        public ActionResult Payment(string bookingId, int amount)
+        public ActionResult Payment(string bookingId, int amount, string seatno, string showtimeid)
         {
             if (Session["UserId"] == null)
                 return RedirectToAction("Login", "User");
@@ -30,7 +30,9 @@ namespace MovieApplicationMVC.Controllers
                 PaymentMethod = "Credit Card",
                 PaymentStatus = "Pending",
                 PaymentDate = DateTime.Now,
-                UserId = Session["UserId"].ToString()
+                UserId = Session["UserId"].ToString(),
+                NumberOfSeats = seatno,
+                ShowtimeId = showtimeid
             };
 
             return View(paymentDetails);
@@ -47,8 +49,13 @@ namespace MovieApplicationMVC.Controllers
 
                 if (!response.IsSuccessStatusCode)
                     throw new Exception("Error processing payment.");
-               
-                return RedirectToAction("CreateAfterPayment", "Ticket", new { bookingId = paymentDetails.BookingId,showTimeId="ST01", seatNumber=3 });
+
+                return RedirectToAction("CreateAfterPayment", "Ticket", new
+                {
+                    bookingId = paymentDetails.BookingId,
+                    showTimeId = paymentDetails.ShowtimeId,
+                    seatNumber = paymentDetails.NumberOfSeats // Convert to string if needed
+                });
             }
             catch (Exception ex)
             {

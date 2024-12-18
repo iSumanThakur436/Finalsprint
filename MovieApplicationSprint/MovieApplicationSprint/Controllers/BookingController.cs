@@ -29,7 +29,10 @@ public class BookingController : ApiController
             return Ok(new
             {
                 BookingId = booking.BookingId,
-                TotalPrice = booking.TotalPrice
+                TotalPrice = booking.TotalPrice,
+                NumberOfSeats = booking.NumberOfSeats,
+                ShowTime_ = booking.ShowTimeId
+
             });
         }
         catch (Exception ex)

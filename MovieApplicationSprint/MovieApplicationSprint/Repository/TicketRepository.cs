@@ -53,8 +53,13 @@ namespace MovieApplicationSprint.Repositories
                 }
 
                 // Generate ticket ID dynamically (e.g., tk01, tk02, etc.)
-                int nextTicketNumber = _context.Tickets.Count() + 1;
-                ticket.TicketId = $"tk{nextTicketNumber:00}";
+                if (string.IsNullOrEmpty(ticket.TicketId))
+                {
+                    // Generate ticket ID dynamically (e.g., tk01, tk02, etc.)
+                    int nextTicketNumber = _context.Tickets.Count() + 1;
+                    ticket.TicketId = $"tk{nextTicketNumber:00}";
+                }
+
 
                 _context.Tickets.Add(ticket);
                 _context.SaveChanges();

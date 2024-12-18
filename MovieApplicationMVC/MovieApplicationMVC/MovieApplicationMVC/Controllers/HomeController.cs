@@ -34,6 +34,39 @@ namespace MovieApplicationMVC.Controllers
 
             return View(movies);
         }
+        public async Task<ActionResult> SearchMovies(string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                ViewBag.Error = "Keyword cannot be empty.";
+                return RedirectToAction("Index");
+            }
+
+            List<Movie> movies = new List<Movie>();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(apiBaseUrl);
+
+                    HttpResponseMessage response = await client.GetAsync($"/SearchMovies/{keyword}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string json = await response.Content.ReadAsStringAsync();
+                        movies = JsonConvert.DeserializeObject<List<Movie>>(json);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            // Pass search results to the new SearchResults view
+            return View("SearchResults", movies);
+        }
+
+
 
         public async Task<ActionResult> MovieDetails(string id)
         {
