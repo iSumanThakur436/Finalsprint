@@ -1,0 +1,31 @@
+﻿@model MovieApplicationMVC.Models.PaymentDetails
+
+@{
+    ViewBag.Title = "Payment";
+}
+
+<h2>Payment</h2>
+
+<form method="post" action="@Url.Action("ProcessPayment", "Payment")">
+    @Html.HiddenFor(m => m.BookingId)
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.PaymentDate)
+    @Html.HiddenFor(m => m.PaymentMethod)
+
+    <div>
+        <label>Booking ID:</label>
+        <span>@Model.BookingId</span>
+    </div>
+    <div>
+        <label>Total Amount:</label>
+        <span>@Model.Amount</span>
+        @Html.HiddenFor(m => m.Amount)
+    </div>
+    <div>
+        <label>Payment Status:</label>
+        <span>Pending</span>
+        @Html.HiddenFor(m => m.PaymentStatus)
+    </div>
+
+    <button type="submit">Process Payment</button>
+</form>

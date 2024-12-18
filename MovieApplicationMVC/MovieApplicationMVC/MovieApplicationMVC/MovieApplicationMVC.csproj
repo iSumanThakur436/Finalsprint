@@ -152,13 +152,18 @@
     <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LandingController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\TheaterController.cs" />
+    <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\Booking.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\MovieTheaterDetails.cs" />
+    <Compile Include="Models\Payment.cs" />
+    <Compile Include="Models\PaymentDetails.cs" />
     <Compile Include="Models\ShowTime.cs" />
     <Compile Include="Models\Theater.cs" />
+    <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -233,6 +238,10 @@
     <Content Include="Views\Home\SelectLocation.cshtml" />
     <Content Include="Views\Home\TheaterList.cshtml" />
     <Content Include="Views\Booking\Create.cshtml" />
+    <Content Include="Views\Payment\Payment.cshtml" />
+    <Content Include="Views\Ticket\Tickets.cshtml" />
+    <Content Include="Views\Booking\Tickets.cshtml" />
+    <Content Include="Views\Ticket\TicketDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

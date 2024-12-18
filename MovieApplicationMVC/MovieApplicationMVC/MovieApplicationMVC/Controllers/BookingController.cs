@@ -13,32 +13,7 @@ namespace MovieApplicationMVC.Controllers
 
         public BookingController()
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:49681/Booking/") };
-        }
-
-        // Render Create Booking form with prefilled MovieTheaterDetails
-        [HttpGet]
-        public ActionResult Create(string movieId, string theaterId, string showTimeId, string title, string theaterName, int ticketPrice, string showDateTime)
-        {
-            if (Session["UserId"] == null)
-                return RedirectToAction("Login", "User");
-
-            // Parse showDateTime to DateTime format
-            DateTime parsedShowDateTime = DateTime.Parse(showDateTime);
-
-            var movieTheaterDetails = new MovieTheaterDetails
-            {
-                UserId = Session["UserId"].ToString(),
-                MovieId = movieId,
-                TheaterId = theaterId,
-                ShowTimeId = showTimeId,
-                Title = title,
-                TheaterName = theaterName,
-                ShowDateTime = parsedShowDateTime,
-                TicketPrice = ticketPrice
-            };
-
-            return View(movieTheaterDetails);
+            _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:49681/api/booking/") };
         }
 
         [HttpPost]
@@ -55,12 +30,12 @@ namespace MovieApplicationMVC.Controllers
 
             var booking = new Booking
             {
-                BookingId = "B" + new Random().Next(1000, 9999), // Generate BookingId
-                UserId = movieTheaterDetails.UserId,
+                BookingId = "B" + new Random().Next(1000, 9999),
+                UserId = Session["UserId"].ToString(),
                 MovieId = movieTheaterDetails.MovieId,
                 TheaterId = movieTheaterDetails.TheaterId,
                 ShowTimeId = movieTheaterDetails.ShowTimeId,
-                BookingDate = bookingDate, // User input
+                BookingDate = bookingDate,
                 NumberOfSeats = numberOfSeats,
                 TotalPrice = numberOfSeats * movieTheaterDetails.TicketPrice,
                 Status = "Pending"
@@ -71,10 +46,13 @@ namespace MovieApplicationMVC.Controllers
                 var content = new StringContent(JsonConvert.SerializeObject(booking), Encoding.UTF8, "application/json");
                 var response = _httpClient.PostAsync("Create", content).Result;
 
-                if (!response.IsSuccessStatusCode)
-                    throw new Exception("Error creating booking.");
+                if (response.IsSuccessStatusCode)
+                {
+                    var bookingResponse = JsonConvert.DeserializeObject<Booking>(response.Content.ReadAsStringAsync().Result);
+                    return RedirectToAction("Payment", "Payment", new { bookingId = bookingResponse.BookingId, amount = bookingResponse.TotalPrice });
+                }
 
-                return RedirectToAction("GetAllBookings");
+                throw new Exception("Error creating booking.");
             }
             catch (Exception ex)
             {
@@ -82,5 +60,17 @@ namespace MovieApplicationMVC.Controllers
             }
         }
 
+        public ActionResult Tickets(string bookingId)
+        {
+            var ticket = new Ticket
+            {
+                TicketId = "TK123",
+                BookingId = bookingId,
+                ShowTimeId = "ST456",
+                SeatNumber = "1,2"
+            };
+
+            return View(ticket);
+        }
     }
 }

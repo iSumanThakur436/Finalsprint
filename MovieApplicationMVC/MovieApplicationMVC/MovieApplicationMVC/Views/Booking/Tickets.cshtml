@@ -1,0 +1,33 @@
+﻿@model IEnumerable<MovieApplicationMVC.Models.Ticket>
+
+@{
+    ViewBag.Title = "Tickets";
+}
+
+<h2>Your Tickets</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ticket ID</th>
+            <th>Booking ID</th>
+            <th>Show Time</th>
+            <th>Seat Number</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ticket in Model)
+        {
+            <tr>
+                <td>@ticket.TicketId</td>
+                <td>@ticket.BookingId</td>
+                <td>@ticket.ShowTimeId</td>
+                <td>@ticket.SeatNumber</td>
+                <td>
+                    <a href="@Url.Action("DownloadTicket", "Ticket", new { ticketId = ticket.TicketId })" class="btn btn-primary">Download</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

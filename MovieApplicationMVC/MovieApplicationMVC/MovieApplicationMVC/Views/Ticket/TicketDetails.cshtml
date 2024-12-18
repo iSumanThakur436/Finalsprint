@@ -1,0 +1,28 @@
+﻿@model MovieApplicationMVC.Models.Ticket
+
+@{
+    ViewBag.Title = "Ticket Details";
+}
+
+<h2>Ticket Details</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Ticket ID</th>
+        <td>@Model.TicketId</td>
+    </tr>
+    <tr>
+        <th>Booking ID</th>
+        <td>@Model.BookingId</td>
+    </tr>
+    <tr>
+        <th>Show Time</th>
+        <td>@Model.ShowTimeId</td>
+    </tr>
+    <tr>
+        <th>Seat Number</th>
+        <td>@Model.SeatNumber</td>
+    </tr>
+</table>
+
+<a href="@Url.Action("DownloadTicket", "Ticket", new { ticketId = Model.TicketId })" class="btn btn-primary">Download Ticket</a>
